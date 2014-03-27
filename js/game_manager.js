@@ -20,7 +20,7 @@ GameManager.prototype.restart = function (mode) {
   this.setup(mode);
 };
 
-// Keep playing after winning (allows going over 2048)
+// Keep playing after winning (allows going over 10)
 GameManager.prototype.keepPlaying = function () {
   this.keepPlaying = true;
   this.actuator.continueGame(); // Clear the game won/lost message
@@ -82,7 +82,7 @@ GameManager.prototype.addRandomTile = function () {
     var value = 0;
     if (this.mode) {
       var i = this.step;
-      while (!(i & 1)) {
+      while (!(i & 1) && value < 9) {
 	value ++;
 	i >>= 1;
       }
@@ -187,7 +187,7 @@ GameManager.prototype.move = function (direction) {
           // Update the score
           self.score += merged.value;
 
-          // The mighty 2048 tile
+          // The mighty ten tile
           if (merged.value === 10) self.won = true;
         } else {
           self.moveTile(tile, positions.farthest);
