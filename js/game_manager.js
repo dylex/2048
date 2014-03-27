@@ -14,10 +14,10 @@ function GameManager(size, InputManager, Actuator, StorageManager) {
 }
 
 // Restart the game
-GameManager.prototype.restart = function () {
+GameManager.prototype.restart = function (mode) {
   this.storageManager.clearGameState();
   this.actuator.continueGame(); // Clear the game won/lost message
-  this.setup();
+  this.setup(mode);
 };
 
 // Keep playing after winning (allows going over 2048)
@@ -36,19 +36,25 @@ GameManager.prototype.isGameTerminated = function () {
 };
 
 // Set up the game
-GameManager.prototype.setup = function () {
+GameManager.prototype.setup = function (mode) {
   var previousState = this.storageManager.getGameState();
 
   // Reload the game from a previous game if present
   if (previousState) {
     this.grid        = new Grid(previousState.grid.size,
                                 previousState.grid.cells); // Reload grid
+    this.mode	     = previousState.mode;
+    this.step	     = previousState.step;
     this.score       = previousState.score;
     this.over        = previousState.over;
     this.won         = previousState.won;
     this.keepPlaying = previousState.keepPlaying;
   } else {
     this.grid        = new Grid(this.size);
+    if (mode === undefined)
+      mode = this.mode || false;
+    this.mode	     = mode
+    this.step	     = 0;
     this.score       = 0;
     this.over        = false;
     this.won         = false;
@@ -72,7 +78,16 @@ GameManager.prototype.addStartTiles = function () {
 // Adds a tile in a random position
 GameManager.prototype.addRandomTile = function () {
   if (this.grid.cellsAvailable()) {
-    var value = Math.random() < 0.9 ? 0 : 1;
+    this.step++;
+    var value = 0;
+    if (this.mode) {
+      var i = this.step;
+      while (!(i & 1)) {
+	value ++;
+	i >>= 1;
+      }
+    } else if (Math.random() > 0.9)
+      value = 1;
     var tile = new Tile(this.grid.randomAvailableCell(), value);
 
     this.grid.insertTile(tile);
@@ -106,6 +121,8 @@ GameManager.prototype.actuate = function () {
 GameManager.prototype.serialize = function () {
   return {
     grid:        this.grid.serialize(),
+    mode:	 this.mode,
+    step:	 this.step,
     score:       this.score,
     over:        this.over,
     won:         this.won,
