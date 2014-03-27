@@ -72,8 +72,9 @@ KeyboardInputManager.prototype.listen = function () {
   });
 
   // Respond to button presses
-  this.bindButtonPress(".retry-button", this.restart);
-  this.bindButtonPress(".restart-button", this.restart);
+  this.bindButtonPress(".retry-button", this.restart(undefined));
+  this.bindButtonPress(".restart-button", this.restart(false));
+  this.bindButtonPress(".quick-button", this.restart(true));
   this.bindButtonPress(".keep-playing-button", this.keepPlaying);
 
   // Respond to swipe events
@@ -132,10 +133,10 @@ KeyboardInputManager.prototype.listen = function () {
   });
 };
 
-KeyboardInputManager.prototype.restart = function (event) {
+KeyboardInputManager.prototype.restart = function (mode) { return function (event) {
   event.preventDefault();
-  this.emit("restart");
-};
+  this.emit("restart", mode);
+} };
 
 KeyboardInputManager.prototype.keepPlaying = function (event) {
   event.preventDefault();

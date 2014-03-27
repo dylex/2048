@@ -520,21 +520,24 @@ hr {
 .above-game:after {
   content: "";
   display: block;
-  clear: both; }
+  clear: both;
+  }
 
 .game-intro {
   float: left;
   line-height: 42px;
   margin-bottom: 0; }
 
-.restart-button {
+.restart-button, .quick-button {
   display: inline-block;
   background: #cc88aa;
   border-radius: 3px;
-  padding: 0 20px;
+  padding: 0 10px;
+  margin-left: 3px;
   text-decoration: none;
   color: black;
   height: 40px;
+  min-width: 47px;
   line-height: 42px;
   cursor: pointer;
   display: block;
@@ -574,7 +577,7 @@ hr {
     box-sizing: border-box;
     line-height: 1.65; }
 
-  .restart-button {
+  .restart-button, .quick-button {
     width: 42%;
     padding: 0;
     display: block;
