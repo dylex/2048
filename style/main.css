@@ -478,7 +478,7 @@ hr {
   line-height: 42px;
   margin-bottom: 0; }
 
-.restart-button, .quick-button {
+.restart-button, .quick-button, .easy-button {
   display: inline-block;
   background: #cc88aa;
   border-radius: 3px;

@@ -52,7 +52,7 @@ GameManager.prototype.setup = function (mode) {
   } else {
     this.grid        = new Grid(this.size);
     if (mode === undefined)
-      mode = this.mode || false;
+      mode = this.mode || 0;
     this.mode	     = mode
     this.step	     = 0;
     this.score       = 0;
@@ -76,17 +76,19 @@ GameManager.prototype.addStartTiles = function () {
 };
 
 // Adds a tile in a random position
-GameManager.prototype.addRandomTile = function () {
+GameManager.prototype.addRandomTile = function (last) {
   if (this.grid.cellsAvailable()) {
     this.step++;
     var value = 0;
-    if (this.mode) {
+    if (this.mode == 1) {
       var i = this.step;
       while (!(i & 1) && value < 9) {
 	value ++;
 	i >>= 1;
       }
-    } else if (Math.random() > 0.9)
+    } else if (this.mode == 2 && last !== undefined)
+      value = last;
+    else if (Math.random() > 0.9)
       value = 1;
     var tile = new Tile(this.grid.randomAvailableCell(), value);
 
@@ -159,6 +161,7 @@ GameManager.prototype.move = function (direction) {
   var vector     = this.getVector(direction);
   var traversals = this.buildTraversals(vector);
   var moved      = false;
+  var last;
 
   // Save the current tile positions and remove merger information
   this.prepareTiles();
@@ -184,6 +187,9 @@ GameManager.prototype.move = function (direction) {
           // Converge the two tiles' positions
           tile.updatePosition(positions.next);
 
+	  if (!(last > merged.value))
+	    last = merged.value;
+
           // Update the score
           self.score += merged.value;
 
@@ -201,7 +207,7 @@ GameManager.prototype.move = function (direction) {
   });
 
   if (moved) {
-    this.addRandomTile();
+    this.addRandomTile(last);
 
     if (!this.movesAvailable()) {
       this.over = true; // Game over!

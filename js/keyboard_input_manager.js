@@ -70,8 +70,9 @@ KeyboardInputManager.prototype.listen = function () {
 
   // Respond to button presses
   this.bindButtonPress(".retry-button", this.restart(undefined));
-  this.bindButtonPress(".restart-button", this.restart(false));
-  this.bindButtonPress(".quick-button", this.restart(true));
+  this.bindButtonPress(".restart-button", this.restart(0));
+  this.bindButtonPress(".quick-button", this.restart(1));
+  this.bindButtonPress(".easy-button", this.restart(2));
   this.bindButtonPress(".keep-playing-button", this.keepPlaying);
 
   // Respond to swipe events
